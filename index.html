@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PROOF — Don’t Follow the Narrative. Prove It.</title>
+<meta name="description" content="PROOF separates real crypto narratives from market noise through evidence, data and measurable signals.">
+<meta name="theme-color" content="#050505">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230d0d0d'/%3E%3Crect x='4' y='4' width='24' height='24' fill='none' stroke='%23333' stroke-width='3'/%3E%3Crect x='9' y='9' width='14' height='5' fill='%23666'/%3E%3Crect x='9' y='18' width='14' height='5' fill='%23444'/%3E%3Crect x='12' y='12' width='8' height='8' fill='%23000'/%3E%3Cpath d='M16 3V29M3 16H29' stroke='%23fff' stroke-width='.6'/%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #050505;
+  --panel: rgba(10,10,10,.72);
+  --fg: #f4f4f2;
+  --muted: #858583;
+  --dim: #4a4a48;
+  --line: rgba(255,255,255,.075);
+  --line-strong: rgba(255,255,255,.16);
+  --blue: #2868ff;
+  --blue-soft: rgba(40,104,255,.16);
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --pad: clamp(1rem, 4vw, 3.5rem);
+}
+* { box-sizing: border-box; }
+html { background: var(--bg); color-scheme: dark; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100vh; min-height: 100svh; overflow-x: hidden;
+  background: radial-gradient(circle at 50% 35%, rgba(40,104,255,.035), transparent 32%), var(--bg);
+  color: var(--fg); font-family: var(--mono); -webkit-font-smoothing: antialiased;
+}
+
+/* background system */
+.system-grid {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 42px 42px;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,.9), rgba(0,0,0,.55) 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,.9), rgba(0,0,0,.55) 60%, transparent 100%);
+}
+.scanline {
+  position: fixed; inset: 0; pointer-events: none; z-index: 10;
+  background: repeating-linear-gradient(to bottom, transparent 0, transparent 4px, rgba(255,255,255,.012) 5px);
+}
+.cross { position: fixed; width: 14px; height: 14px; z-index: 2; opacity: .45; pointer-events: none; }
+.cross::before, .cross::after { content: ""; position: absolute; background: rgba(255,255,255,.35); }
+.cross::before { width: 1px; height: 14px; left: 6px; }
+.cross::after { height: 1px; width: 14px; top: 6px; }
+.cross.a { top: 16%; left: 8%; }
+.cross.b { top: 28%; right: 9%; }
+.cross.c { top: 67%; left: 5%; }
+.cross.d { bottom: 10%; right: 8%; }
+.corner { position: fixed; width: 32px; height: 32px; right: 20px; bottom: 20px; border-right: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); z-index: 2; pointer-events: none; }
+
+.container { position: relative; z-index: 3; width: min(1080px, calc(100% - (var(--pad) * 2))); margin: 0 auto; }
+
+/* top bar */
+.topbar { padding-top: max(18px, env(safe-area-inset-top)); display: flex; justify-content: space-between; align-items: flex-start; color: var(--muted); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+.top-left, .top-right { display: flex; flex-direction: column; gap: 5px; }
+.top-right { text-align: right; }
+.blue { color: var(--blue); }
+
+/* hero */
+.hero { min-height: 86vh; min-height: 86svh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem 0; }
+.system-id { margin-bottom: 28px; color: var(--muted); font-size: 9px; letter-spacing: .22em; text-transform: uppercase; }
+h1 { margin: 0; width: 100%; line-height: 0; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.mark { display: block; width: 100%; max-width: 38rem; height: auto; margin: 0 auto; animation: reveal 1000ms cubic-bezier(.2,.7,.2,1) both; }
+.slogan { margin: 34px 0 0; font-size: clamp(.72rem, 2vw, .95rem); letter-spacing: .24em; line-height: 1.9; padding-left: .24em; }
+.hero-line { width: min(330px, 65%); height: 1px; margin: 28px auto 0; background: var(--line-strong); }
+.description { max-width: 560px; margin: 22px auto 0; color: var(--muted); font-size: clamp(.72rem, 2vw, .85rem); line-height: 1.8; }
+
+/* evidence strip */
+.evidence { width: min(850px, 100%); margin: 50px auto 0; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.evidence-item { padding: 14px 12px; border-right: 1px solid var(--line); color: var(--muted); font-size: 8px; letter-spacing: .13em; text-transform: uppercase; }
+.evidence-item:last-child { border-right: 0; }
+.check { color: var(--blue); margin-right: 6px; }
+
+/* sections */
+.section { padding: 90px 0; }
+.section-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 28px; }
+.section-title { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; }
+.section-meta { color: var(--muted); font-size: 8px; letter-spacing: .1em; text-align: right; }
+.narrative-intro { max-width: 700px; margin-bottom: 32px; color: var(--muted); font-size: 12px; line-height: 1.8; }
+.narratives { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.narrative { position: relative; min-height: 155px; padding: 25px; background: linear-gradient(135deg, rgba(255,255,255,.025), transparent 50%), var(--panel); transition: background .25s ease; }
+.narrative:hover { background: linear-gradient(135deg, var(--blue-soft), transparent 55%), var(--panel); }
+.narrative-number { color: var(--dim); font-size: 9px; }
+.narrative-name { margin-top: 20px; font-size: 14px; letter-spacing: .08em; }
+.narrative-text { max-width: 420px; margin-top: 12px; color: var(--muted); font-size: 10px; line-height: 1.7; }
+.signal { position: absolute; top: 24px; right: 24px; width: 5px; height: 5px; background: var(--blue); box-shadow: 0 0 12px rgba(40,104,255,.45); }
+
+/* protocol */
+.proof-box { border: 1px solid var(--line-strong); padding: clamp(25px, 5vw, 50px); background: linear-gradient(135deg, rgba(255,255,255,.025), transparent 60%); }
+.proof-label { color: var(--blue); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; }
+.proof-title { max-width: 650px; margin: 18px 0 0; font-size: clamp(1.4rem, 4vw, 2.3rem); line-height: 1.15; letter-spacing: -.04em; }
+.proof-grid { display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 42px; border-top: 1px solid var(--line); }
+.metric { padding: 20px 10px 0; border-right: 1px solid var(--line); }
+.metric:last-child { border-right: 0; }
+.metric-number { color: var(--fg); font-size: 12px; }
+.metric-name { margin-top: 7px; color: var(--muted); font-size: 8px; letter-spacing: .1em; text-transform: uppercase; }
+
+/* ad */
+.ad-wrap { padding: 60px 0 100px; display: flex; justify-content: center; }
+.ad {
+  position: relative; width: min(600px, 100%); min-height: 130px; padding: 2.5rem 1rem 1.5rem;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  border: 1px solid var(--line-strong); color: var(--muted); text-decoration: none;
+  font-size: clamp(.75rem, 2vw, .95rem); letter-spacing: .18em;
+  -webkit-tap-highlight-color: transparent;
+  transition: color .25s ease, border-color .25s ease, background .25s ease;
+}
+.ad::before { content: "AD SLOT / TEST"; position: absolute; top: 12px; left: 14px; color: var(--dim); font-size: 7px; letter-spacing: .16em; }
+.ad:hover { color: var(--fg); border-color: var(--blue); background: rgba(40,104,255,.035); }
+.ad:active { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+a:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; }
+
+
+/* donate */
+.donate { padding: 0 0 20px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 18px; }
+.donate-text { margin: 0; max-width: 34rem; color: var(--muted); font-size: clamp(.75rem, 2.4vw, .9rem); line-height: 1.8; }
+.addr { display: block; max-width: 100%; padding: 12px 14px; border: 1px solid var(--line); color: var(--fg); font-family: var(--mono); font-size: clamp(.6rem, 2.6vw, .78rem); letter-spacing: .04em; line-height: 1.6; overflow-wrap: anywhere; word-break: break-all; user-select: all; }
+.donate-btn { appearance: none; -webkit-appearance: none; padding: 14px 28px; background: transparent; color: var(--fg); border: 1px solid var(--line-strong); border-radius: 0; font: inherit; font-size: .8rem; letter-spacing: .2em; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: color .25s ease, border-color .25s ease, background .25s ease; }
+.donate-btn:hover { border-color: var(--blue); background: rgba(40,104,255,.035); }
+.donate-btn.done { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.donate-btn:focus-visible { outline: 2px solid var(--fg); outline-offset: 4px; }
+
+/* footer */
+footer { padding: 30px 0 max(30px, env(safe-area-inset-bottom)); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); color: var(--muted); font-size: 8px; letter-spacing: .13em; text-transform: uppercase; }
+footer .links { display: flex; flex-wrap: wrap; gap: 0 1.75rem; }
+footer a { color: var(--fg); text-decoration: none; padding: .5rem 0; transition: color .2s ease; }
+footer a:hover { color: var(--blue); }
+
+@keyframes reveal { from { opacity: 0; } to { opacity: 1; } }
+
+@media (max-width: 700px) {
+  .topbar { font-size: 8px; }
+  .hero { min-height: 82vh; min-height: 82svh; }
+  .slogan { font-size: .68rem; letter-spacing: .17em; }
+  .description { font-size: .72rem; padding: 0 10px; }
+  .evidence { grid-template-columns: 1fr; }
+  .evidence-item { border-right: 0; border-bottom: 1px solid var(--line); }
+  .evidence-item:last-child { border-bottom: 0; }
+  .section { padding: 64px 0; }
+  .section-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .section-meta { text-align: left; }
+  .narratives { grid-template-columns: 1fr; }
+  .proof-grid { grid-template-columns: repeat(2, 1fr); }
+  .metric { min-height: 65px; border-bottom: 1px solid var(--line); }
+  .metric:nth-child(2n) { border-right: 0; }
+  .metric:last-child { grid-column: 1 / -1; border-right: 0; }
+  .ad-wrap { padding: 64px 0; }
+  footer { flex-direction: column; align-items: flex-start; gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mark { animation: none; }
+  * { scroll-behavior: auto !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="system-grid" aria-hidden="true"></div>
+<div class="scanline" aria-hidden="true"></div>
+<div class="cross a" aria-hidden="true"></div>
+<div class="cross b" aria-hidden="true"></div>
+<div class="cross c" aria-hidden="true"></div>
+<div class="cross d" aria-hidden="true"></div>
+<div class="corner" aria-hidden="true"></div>
+
+<div class="container">
+
+  <header class="topbar">
+    <div class="top-left">
+      <span>SYS: PROOF-INTEL-01</span>
+      <span>CLASSIFICATION: <span class="blue">PUBLIC</span></span>
+    </div>
+    <div class="top-right">
+      <span>UTC / 2026</span>
+      <span>STATUS: <span class="blue">ONLINE</span></span>
+    </div>
+  </header>
+
+  <main class="hero">
+    <div class="system-id">NARRATIVE INTELLIGENCE SYSTEM</div>
+
+    <h1>
+      <span class="sr">PROOF</span>
+      <svg class="mark" viewBox="0 0 440 100" aria-hidden="true" focusable="false">
+        <path fill="#f4f4f2" fill-rule="evenodd" d="M0 0H62L76 14V50L62 64H22V100H0ZM22 22H54V42H22Z"/>
+        <path fill="#f4f4f2" fill-rule="evenodd" transform="translate(90 0)" d="M0 0H62L76 14V50L64 62L80 100H56L42 64H22V100H0ZM22 22H54V42H22Z"/>
+        <path fill="#f4f4f2" fill-rule="evenodd" transform="translate(184 0)" d="M14 0H62L76 14V86L62 100H14L0 86V14ZM26 22H50L54 26V74L50 78H26L22 74V26Z"/>
+        <path fill="#050505" stroke="#858583" stroke-width="1.5" fill-rule="evenodd" transform="translate(274 0)" d="M14 0H62L76 14V86L62 100H14L0 86V14ZM26 22H50L54 26V74L50 78H26L22 74V26Z"/>
+        <path fill="#c4c4c1" transform="translate(364 0)" d="M0 0H62L76 14V22H22V40H62L56 58H22V100H0Z"/>
+      </svg>
+    </h1>
+
+    <p class="slogan">DON’T FOLLOW THE NARRATIVE.<br>PROVE IT.</p>
+    <div class="hero-line" aria-hidden="true"></div>
+    <p class="description">A system for separating real crypto narratives from market noise. We track the story — then look for the evidence behind it.</p>
+
+    <div class="evidence">
+      <div class="evidence-item"><span class="check">✓</span>DATA VERIFIED</div>
+      <div class="evidence-item"><span class="check">✓</span>ON-CHAIN SIGNALS</div>
+      <div class="evidence-item"><span class="check">✓</span>TIMESTAMPED</div>
+    </div>
+  </main>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-title">CURRENT NARRATIVES</div>
+      <div class="section-meta">MARKET WATCHLIST / 2026</div>
+    </div>
+    <div class="narrative-intro">Narratives move attention before fundamentals catch up. PROOF exists to test whether the attention is backed by capital, users, revenue, liquidity and on-chain activity.</div>
+
+    <div class="narratives">
+      <article class="narrative">
+        <span class="narrative-number">01</span><span class="signal"></span>
+        <div class="narrative-name">STABLECOINS</div>
+        <div class="narrative-text">Digital dollars are becoming financial infrastructure. The question is no longer whether stablecoins matter — but where the measurable adoption is.</div>
+      </article>
+      <article class="narrative">
+        <span class="narrative-number">02</span><span class="signal"></span>
+        <div class="narrative-name">RWA</div>
+        <div class="narrative-text">Tokenized real-world assets continue moving from narrative to infrastructure. PROOF checks issuance, liquidity and actual usage.</div>
+      </article>
+      <article class="narrative">
+        <span class="narrative-number">03</span><span class="signal"></span>
+        <div class="narrative-name">AI × CRYPTO</div>
+        <div class="narrative-text">AI agents, verifiable AI and decentralized compute remain major themes. Attention alone is not evidence.</div>
+      </article>
+      <article class="narrative">
+        <span class="narrative-number">04</span><span class="signal"></span>
+        <div class="narrative-name">AGENTIC PAYMENTS</div>
+        <div class="narrative-text">Machines paying machines creates a new crypto thesis. The real signal is transaction volume and recurring demand.</div>
+      </article>
+      <article class="narrative">
+        <span class="narrative-number">05</span><span class="signal"></span>
+        <div class="narrative-name">PREDICTION MARKETS</div>
+        <div class="narrative-text">Information becomes a market. PROOF separates genuine participation from temporary attention.</div>
+      </article>
+      <article class="narrative">
+        <span class="narrative-number">06</span><span class="signal"></span>
+        <div class="narrative-name">PERP DEXS</div>
+        <div class="narrative-text">Trading infrastructure remains one of crypto’s strongest measurable narratives: volume, fees, users and retention.</div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="proof-box">
+      <div class="proof-label">PROOF PROTOCOL</div>
+      <div class="proof-title">A narrative is not a signal. Evidence makes it one.</div>
+      <div class="proof-grid">
+        <div class="metric"><div class="metric-number">01</div><div class="metric-name">CAPITAL</div></div>
+        <div class="metric"><div class="metric-number">02</div><div class="metric-name">USERS</div></div>
+        <div class="metric"><div class="metric-number">03</div><div class="metric-name">REVENUE</div></div>
+        <div class="metric"><div class="metric-number">04</div><div class="metric-name">ON-CHAIN</div></div>
+        <div class="metric"><div class="metric-number">05</div><div class="metric-name">ATTENTION</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="donate">
+    <p class="donate-text">Raising money for a Claude subscription at 10 years old to change the world.</p>
+    <code class="addr" id="addr">5NBfZmHw1GDeBacKDAUumj8EWum5NcbeGY6H8dujPThx</code>
+    <button class="donate-btn" type="button" id="donate">DONATE</button>
+  </section>
+
+  <div class="ad-wrap">
+    <a class="ad" href="https://x.com/PROOFl7sr" target="_blank" rel="noopener noreferrer">HERE COULD BE YOUR AD 😂</a>
+  </div>
+
+  <footer>
+    <span>PROOF / NARRATIVE INTELLIGENCE</span>
+    <span class="links">
+      <a href="https://x.com/PROOFl7sr" target="_blank" rel="noopener noreferrer">X / @PROOFl7sr →</a>
+    </span>
+  </footer>
+
+</div>
+<script>
+(function () {
+  var btn = document.getElementById('donate');
+  var addr = document.getElementById('addr');
+  if (!btn || !addr) return;
+  var text = addr.textContent.trim();
+  function fallback() {
+    var t = document.createElement('textarea');
+    t.value = text; t.setAttribute('readonly', '');
+    t.style.position = 'fixed'; t.style.opacity = '0';
+    document.body.appendChild(t); t.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(t);
+  }
+  btn.addEventListener('click', function () {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).catch(fallback);
+    } else { fallback(); }
+    btn.textContent = 'ADDRESS COPIED';
+    btn.classList.add('done');
+    setTimeout(function () { btn.textContent = 'DONATE'; btn.classList.remove('done'); }, 2000);
+  });
+})();
+</script>
+</body>
+</html>
